@@ -30,6 +30,13 @@ namespace OpbeansDotnet.Controllers
 		public ActionResult<Product> Get(int id) =>
 			_dbDbContext.Products.Where(n => n.Id == id).Select(n => Mapper.Map<Product>(n)).First();
 
-		//TODO customerwhobought
+
+		[HttpGet("{id:int?}/customers")]
+		public ActionResult<IEnumerable<Customer>> Customerwhobought(int id)
+			=> _dbDbContext.OrderLines.Join(_dbDbContext.Customers,
+					orderLine => orderLine.Id,
+					customer => customer.Id,
+					(orderLines, customer) => customer)
+				.Select(n => Mapper.Map<Customer>(n)).ToList();
 	}
 }
