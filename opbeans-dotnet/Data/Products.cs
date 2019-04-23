@@ -1,4 +1,6 @@
-﻿namespace OpbeansDotnet.Data
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace OpbeansDotnet.Data
 {
 	public class Products
 	{
@@ -10,5 +12,7 @@
 		public long Cost { get; set; }
 		public long SellingPrice { get; set; }
 		public long TypeId { get; set; }
+
+		[ForeignKey("TypeId")] public ProductTypes Type { get; set; }
 	}
 }

@@ -12,9 +12,13 @@ namespace OpbeansDotnet.Model
 
 		public string Description { get; set; }
 
-		public ProductType Type { get; set; }
+		public int Cost { get; set; }
 
-		[JsonProperty("selling_price")] public decimal SellingPrice { get; set; }
+		public string Type_id { get; set; }
+
+		public string Type_name { get; set; }
+
+		[JsonProperty("selling_price")] public int SellingPrice { get; set; }
 
 		public int Stock { get; set; }
 	}

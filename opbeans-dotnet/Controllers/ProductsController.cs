@@ -28,8 +28,8 @@ namespace OpbeansDotnet.Controllers
 
 		[HttpGet("{id:int?}")]
 		public ActionResult<Product> Get(int id) =>
-			_dbDbContext.Products.Where(n => n.Id == id).Select(n => Mapper.Map<Product>(n)).First();
-
+			_dbDbContext.Products.Include(n => n.Type).Where(n => n.Id == id).Select(n => Mapper.Map<Product>(n))
+				.First();
 
 		[HttpGet("{id:int?}/customers")]
 		public ActionResult<IEnumerable<Customer>> Customerwhobought(int id)

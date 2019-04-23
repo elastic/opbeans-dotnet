@@ -39,7 +39,10 @@ namespace OpbeansDotnet
 			Mapper.Initialize(cfg =>
 			{
 				cfg.CreateMap<Orders, Order>();
-				cfg.CreateMap<Products, Product>();
+				cfg.CreateMap<Products, Product>()
+					.ForMember(dest => dest.Type_id, opt => opt.MapFrom(src => src.Type.Id))
+					.ForMember(dest => dest.Type_name, opt => opt.MapFrom(src => src.Type.Name));
+				cfg.CreateMap<ProductTypes, ProductType>();
 			});
 
 			app.UseDeveloperExceptionPage();
