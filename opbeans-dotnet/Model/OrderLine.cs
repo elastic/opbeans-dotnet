@@ -7,8 +7,8 @@ namespace OpbeansDotnet.Model
 	{
 		public int Amount { get; set; }
 
-		[ForeignKey("order_id")] public Order Oder { get; set; }
+		public int OderId { get; set; }
 
-		[ForeignKey("product_id")] public Product Product { get; set; }
+		public int ProductId { get; set; }
 	}
 }

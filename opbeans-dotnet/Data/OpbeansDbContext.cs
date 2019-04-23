@@ -77,8 +77,7 @@ namespace OpbeansDotnet.Data
 				entity.ToTable("order_lines");
 
 				entity.Property(e => e.Id)
-					.HasColumnName("id")
-					.ValueGeneratedNever();
+					.HasColumnName("id");
 
 				entity.Property(e => e.Amount).HasColumnName("amount");
 
@@ -92,8 +91,7 @@ namespace OpbeansDotnet.Data
 				entity.ToTable("orders");
 
 				entity.Property(e => e.Id)
-					.HasColumnName("id")
-					.ValueGeneratedNever();
+					.HasColumnName("id");
 
 				entity.Property(e => e.CreatedAt)
 					.IsRequired()
