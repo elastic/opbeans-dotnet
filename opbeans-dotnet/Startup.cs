@@ -38,7 +38,10 @@ namespace OpbeansDotnet
 		{
 			Mapper.Initialize(cfg =>
 			{
-				cfg.CreateMap<Orders, Order>();
+				cfg.CreateMap<Orders, Order>()
+					.ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.Customer.Id))
+					.ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName));
+
 				cfg.CreateMap<Products, Product>()
 					.ForMember(dest => dest.Type_id, opt => opt.MapFrom(src => src.Type.Id))
 					.ForMember(dest => dest.Type_name, opt => opt.MapFrom(src => src.Type.Name));

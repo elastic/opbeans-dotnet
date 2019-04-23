@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OpbeansDotnet.Data;
 using OpbeansDotnet.Model;
 
@@ -17,11 +18,24 @@ namespace OpbeansDotnet.Controllers
 
 		public OrdersController(OpbeansDbContext dbDbContext) => _dbDbContext = dbDbContext;
 
-		public ActionResult<IEnumerable<Order>> Get() => _dbDbContext.Orders.Select(n => Mapper.Map<Order>(n)).ToList();
+		public ActionResult<IEnumerable<Order>> Get() =>
+			_dbDbContext.Orders.Include(n => n.Customer).Select(n => Mapper.Map<Order>(n)).ToList();
 
 		[HttpGet("{id:int?}")]
-		public ActionResult<Order> Get(int id) =>
-			_dbDbContext.Orders.Where(n => n.Id == id).Select(n => Mapper.Map<Order>(n)).First();
+		public ActionResult<OrderDetail> Get(int id)
+		{
+			var order = _dbDbContext.Orders.First(n => n.Id == id);
+
+			return _dbDbContext.OrderLines
+				.Join(_dbDbContext.Products,
+					line => line.ProductId,
+					prod => prod.Id,
+					(line, prod) => new OrderDetail
+					{
+						Id = order.Id, CreatedAt = order.CreatedAt, CustomerId = order.CustomerId,
+						Lines = Mapper.Map<Product>(prod)
+					}).First(n => n.Id == order.Id);
+		}
 
 /**
  * Example body:
