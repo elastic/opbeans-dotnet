@@ -8,7 +8,13 @@ To run the application run the following command from the `opbeans` folder:
 
     dotnet run
 
-By default the application will listen on `localhost:5000`. In case you would like to chagne this run the following command from the `opbeans` folder:
+By default the application will listen on `localhost:5000`. In case you would like to change this run the following command from the `opbeans` folder:
 
     dotnet run --urls=http://localhost:3001
 
+## Docker based
+
+If you'd like to run this demo as a docker container please run the below commands:
+
+    docker build --pull -t opbeans-dotnetapp .
+    docker run --rm -ti -p 3001:80  opbeans-dotnetapp
