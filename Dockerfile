@@ -12,4 +12,6 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
 WORKDIR /app
 COPY --from=build /src/opbeans-dotnet/out ./
+COPY --from=opbeans/opbeans-frontend:latest /app/build /opbeans-frontend
+EXPOSE 80
 ENTRYPOINT ["dotnet", "opbeans-dotnet.dll"]
