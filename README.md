@@ -17,4 +17,4 @@ By default the application will listen on `localhost:5000`. In case you would li
 If you'd like to run this demo as a docker container please run the below commands:
 
     docker build --pull -t opbeans-dotnetapp .
-    docker run --rm -ti -p 3001:80  opbeans-dotnetapp
+    docker run --rm -ti -p 3001:80 opbeans-dotnetapp
