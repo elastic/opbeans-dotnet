@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using AutoMapper;
+using Elastic.Apm.All;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,8 @@ namespace OpbeansDotnet
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
+			app.UseElasticApm();
+
 			Mapper.Initialize(cfg =>
 			{
 				cfg.CreateMap<Orders, Order>()
