@@ -1,7 +1,4 @@
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using OpbeansDotnet.Data;
-using OpbeansDotnet.Model;
 
 namespace OpbeansDotnet.Controllers
 {
