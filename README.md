@@ -21,3 +21,11 @@ If you'd like to run this demo as a docker container please run the below comman
 
 
 ## Makefile
+
+Build the docker image with the usual
+
+    make build
+
+Tests are written using [bats](https://github.com/sstephenson/bats) under the tests dir
+
+    make test

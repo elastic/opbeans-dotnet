@@ -1,5 +1,7 @@
 ROOT_DIR="$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))/"
 
+PORT ?= 80
+
 all: build test
 
 build:
@@ -16,8 +18,8 @@ prepare-test: bats
 	#git submodule update --init --recursive
 
 test: prepare-test
-	PORT=80 DOCKERFILE=Dockerfile bats/bin/bats --tap tests | \
-		tap-xunit --package="Elastic.opbeans" > target/junit-results.xml
+	DOCKERFILE=Dockerfile bats/bin/bats --tap tests | \
+		tap-xunit --package="co.elastic.opbeans" > target/junit-results.xml
 
 publish:
 	docker build --file "Dockerfile" \

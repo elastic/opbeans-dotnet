@@ -25,9 +25,9 @@ SUT_CONTAINER=$(sut_image)
 	assert "true" docker inspect -f {{.State.Running}} $SUT_CONTAINER
 }
 
-@test "Opbeans is initialized" {
-	URL="http://localhost:$(docker port "$SUT_CONTAINER" ${PORT} | cut -d: -f2)"
-	run curl --output /dev/null --silent --head --fail --connect-timeout 10 --max-time 30 "$URL/"
+@test "opbeans is running in port ${PORT}" {
+	URL="http://$(docker port "$SUT_CONTAINER" ${PORT})"
+	assert "200" curl -s -o /dev/null -w "%{http_code}" "$URL/"
 }
 
 @test "clean test containers" {
