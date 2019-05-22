@@ -16,7 +16,8 @@ prepare-test: bats
 	#git submodule update --init --recursive
 
 test: prepare-test
-	DOCKERFILE=Dockerfile bats/bin/bats --tap tests | tap-xunit --package="Elastic.opbeans" > target/junit-results.xml
+	PORT=80 DOCKERFILE=Dockerfile bats/bin/bats --tap tests | \
+		tap-xunit --package="Elastic.opbeans" > target/junit-results.xml
 
 publish:
 	docker build --file "Dockerfile" \

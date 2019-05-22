@@ -26,7 +26,7 @@ SUT_CONTAINER=$(sut_image)
 }
 
 @test "Opbeans is initialized" {
-	URL="http://localhost:$(docker port "$SUT_CONTAINER" 80 | cut -d: -f2)"
+	URL="http://localhost:$(docker port "$SUT_CONTAINER" ${PORT} | cut -d: -f2)"
 	run curl --output /dev/null --silent --head --fail --connect-timeout 10 --max-time 30 "$URL/"
 }
 
