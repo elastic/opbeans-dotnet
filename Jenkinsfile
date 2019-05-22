@@ -50,7 +50,7 @@ pipeline {
             deleteDir()
             unstash 'source'
             dir("${BASE_DIR}"){
-              sh returnStatus: true, script: 'make build'
+              sh 'make build'
             }
           }
         }
@@ -62,14 +62,14 @@ pipeline {
             deleteDir()
             unstash 'source'
             dir("${BASE_DIR}"){
-              sh returnStatus: true, script: 'make test'
+              sh "make test"
             }
           }
           post {
             always {
               junit(allowEmptyResults: true,
                 keepLongStdio: true,
-                testResults: "${BASE_DIR}/**/junit-*.xml,${BASE_DIR}/target/**/TEST-*.xml")
+                testResults: "${BASE_DIR}/**/junit-*.xml")
             }
           }
         }
