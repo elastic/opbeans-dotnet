@@ -18,3 +18,6 @@ If you'd like to run this demo as a docker container please run the below comman
 
     docker build --pull -t opbeans-dotnetapp .
     docker run --rm -ti -p 3001:80 opbeans-dotnetapp
+
+
+## Makefile
