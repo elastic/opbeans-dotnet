@@ -18,7 +18,8 @@ bats: ## Install bats in the project itself
 prepare-test: bats ## Prepare the bats dependencies
 	@npm install tap-xunit -g
 	@mkdir -p target
-	@git submodule update --recursive
+	@git submodule sync
+	@git submodule update --init --recursive
 
 test: prepare-test ## Run the tests
 	@bats/bin/bats --tap tests | tee target/results.tap
