@@ -4,32 +4,37 @@ load 'test_helper/bats-support/load'
 load 'test_helper/bats-assert/load'
 load test_helpers
 
-SUT_IMAGE=$(sut_image)
-SUT_CONTAINER=$(sut_image)
+IMAGE="bats-opbeans"
+CONTAINER="bats-opbeans"
 
 @test "build image" {
 	cd $BATS_TEST_DIRNAME/..
-	docker build -t $SUT_IMAGE .
+	docker build -t $IMAGE .
 }
 
 @test "clean test containers" {
-	cleanup $SUT_CONTAINER
+	cleanup $CONTAINER
 }
 
 @test "create test container" {
-	docker run -d --name $SUT_CONTAINER -P $SUT_IMAGE
+	run docker run -d --name $CONTAINER -P $IMAGE
+	assert_success
 }
 
 @test "test container is running" {
 	sleep 1
-	assert "true" docker inspect -f {{.State.Running}} $SUT_CONTAINER
+	run docker inspect -f {{.State.Running}} $CONTAINER
+	assert_output --partial 'true'
 }
 
 @test "opbeans is running in port ${PORT}" {
-	URL="http://$(docker port "$SUT_CONTAINER" ${PORT})"
-	assert "200" curl -s -o /dev/null -w "%{http_code}" "$URL/"
+	sleep 20
+	URL="http://localhost:$(docker port "$CONTAINER" ${PORT} | cut -d: -f2)"
+	run curl -v --fail --connect-timeout 10 --max-time 30 "$URL/"
+	assert_success
+	assert_output --partial 'HTTP/1.1 200 OK'
 }
 
 @test "clean test containers" {
-	cleanup $SUT_CONTAINER
+	cleanup $CONTAINER
 }
