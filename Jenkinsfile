@@ -73,18 +73,6 @@ pipeline {
             }
           }
         }
-        /**
-        Execute unit tests.
-        */
-        stage('Release') {
-          steps {
-            deleteDir()
-            unstash 'source'
-            dir("${BASE_DIR}"){
-              sh returnStatus: true, script: 'make release'
-            }
-          }
-        }
       }
     }
   }
