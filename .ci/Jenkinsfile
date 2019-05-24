@@ -81,6 +81,9 @@ pipeline {
           input {
             message 'Should we release a new version?'
             ok 'Yes, we should.'
+            parameters {
+              string(name: 'VERSION', defaultValue: 'latest', description: 'What tag?')
+            }
           }
           when {
             beforeAgent true
@@ -99,7 +102,7 @@ pipeline {
             unstash 'source'
             dir("${BASE_DIR}"){
               dockerLogin(secret: "${DOCKERHUB_SECRET}", registry: 'docker.io') {
-                sh 'make publish'
+                sh "VERSION=${VERSION} make publish"
               }
             }
           }
