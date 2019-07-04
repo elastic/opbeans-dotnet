@@ -88,11 +88,11 @@ pipeline {
             }
           }
         }
-        stage('Release') {
+        stage('Release approval') {
           options {
             skipDefaultCheckout()
             timeout(time: 12, unit: 'SECONDS')
-            warnError('The release was not done')
+            catchError( message: 'The release was not approved', buildResult: 'SUCCESS', stageResult: 'ABORTED', catchInterruptions: false)
           }
           input {
             message 'Should we release a new version?'
@@ -115,12 +115,41 @@ pipeline {
             }
           }
           steps {
-            withGithubNotify(context: 'Release') {
-              deleteDir()
-              unstash 'source'
-              dir("${BASE_DIR}"){
-                dockerLogin(secret: "${DOCKERHUB_SECRET}", registry: 'docker.io')
-                sh "VERSION=${VERSION} make publish"
+            script {
+              sh 'env | sort'
+              env.VERSION = "${env.VERSION}"
+              sh 'env | sort'
+            }
+          }
+        }
+        stage('Release') {
+          options {
+            skipDefaultCheckout()
+            timeout(time: 1, unit: 'HOURS')
+          }
+          when {
+            beforeInput true
+            beforeAgent true
+            allOf {
+              anyOf {
+                branch 'master'
+                branch "\\d+\\.\\d+"
+                branch "v\\d?"
+                tag "v\\d+\\.\\d+\\.\\d+*"
+                expression { return !params.Run_As_Master_Branch }  // TODO: reverse logic
+              }
+              expression { env.VERSION != null }
+            }
+          }
+          steps {
+              withGithubNotify(context: 'Release') {
+                deleteDir()
+                unstash 'source'
+                dir("${BASE_DIR}"){
+                  sh 'env | sort'
+                  dockerLogin(secret: "${DOCKERHUB_SECRET}", registry: 'docker.io')
+                  //sh "VERSION=${VERSION} make publish"  // TODO: uncomment
+                }
               }
             }
           }
