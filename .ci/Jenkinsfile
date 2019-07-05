@@ -142,14 +142,13 @@ pipeline {
             }
           }
           steps {
-              withGithubNotify(context: 'Release') {
-                deleteDir()
-                unstash 'source'
-                dir("${BASE_DIR}"){
-                  sh 'env | sort'
-                  dockerLogin(secret: "${DOCKERHUB_SECRET}", registry: 'docker.io')
-                  //sh "VERSION=${VERSION} make publish"  // TODO: uncomment
-                }
+            withGithubNotify(context: 'Release') {
+              deleteDir()
+              unstash 'source'
+              dir("${BASE_DIR}"){
+                sh 'env | sort'
+                dockerLogin(secret: "${DOCKERHUB_SECRET}", registry: 'docker.io')
+                //sh "VERSION=${VERSION} make publish"  // TODO: uncomment
               }
             }
           }
