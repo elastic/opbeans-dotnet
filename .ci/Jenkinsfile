@@ -92,7 +92,7 @@ pipeline {
           options {
             skipDefaultCheckout()
             timeout(time: 12, unit: 'SECONDS')
-            catchError(message: 'The release was not approved', buildResult: 'SUCCESS', stageResult: 'ABORTED', catchInterruptions: true)
+            catchError(message: 'The release was not approved', buildResult: 'SUCCESS', stageResult: 'UNSTABLE', catchInterruptions: true)
           }
           input {
             message 'Should we release a new version?'
