@@ -136,7 +136,7 @@ pipeline {
                 branch "\\d+\\.\\d+"
                 branch "v\\d?"
                 tag "v\\d+\\.\\d+\\.\\d+*"
-                expression { return !params.Run_As_Master_Branch }  // TODO: reverse logic
+                expression { return params.Run_As_Master_Branch }
               }
               expression { env.VERSION != null }
             }
