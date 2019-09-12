@@ -32,8 +32,6 @@ services:
       - ELASTIC_OPBEANS_API_SERVER=${ELASTIC_OPBEANS_API_SERVER:-http://opbeans-dotnet}
       - ELASTIC_APM_SERVER_URLS=${ELASTIC_APM_SERVER_URLS:-http://localhost:8200}
     depends_on:
-      elasticsearch:
-        condition: service_healthy
       apm-server:
         condition: service_healthy
     healthcheck:
