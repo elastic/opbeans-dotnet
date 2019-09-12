@@ -2,26 +2,35 @@ version: "2.1"
 services:
   opbeans-dotnet:
     build: .
-    image: opbeans-dotnet:latest
+    image: opbeans/opbeans-dotnet:latest
     ports:
-      - "127.0.0.1:${OPBEANS_DOTNET_PORT:-8000}:8000"
+      - "127.0.0.1:${OPBEANS_DOTNET_PORT:-3000}:80"
+    container_name: opbeans-dotnet
     logging:
       driver: 'json-file'
       options:
-        max-size: '2m'
-        max-file: '5'
+          max-size: '2m'
+          max-file: '5'
     environment:
-      - ELASTIC_APM_SERVER_URL=${ELASTIC_APM_SERVER_URL:-http://apm-server:8200}
+      - ELASTIC_APM_SERVICE_NAME=${ELASTIC_APM_SERVICE_NAME:-opbeans-dotnet}
+      - ELASTIC_APM_SERVER_URLS=${ELASTIC_APM_SERVER_URL:-http://apm-server:8200}
       - ELASTIC_APM_JS_SERVER_URL=${ELASTIC_APM_JS_SERVER_URL:-http://localhost:8200}
+      - ELASTIC_APM_ENVIRONMENT=testing
+      - ELASTIC_APM_LOG_FILE=stderr
+      - ELASTIC_APM_LOG_LEVEL=debug
     depends_on:
       apm-server:
         condition: service_healthy
-
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost"]
+      retries: 10
+      interval: 20s
+      
   opbeans-frontend:
     build: .
     image: docker.elastic.co/observability-ci/it_opbeans-frontend_nginx:latest
     ports:
-      - "127.0.0.1:${OPBEANS_DOTNET_PORT:-3000}:3000"
+      - "127.0.0.1:${OPBEANS_DOTNET_PORT:-8000}:3000"
     container_name: opbeans-frontend
     logging:
       driver: 'json-file'
@@ -32,15 +41,15 @@ services:
       - ELASTIC_OPBEANS_API_SERVER=${ELASTIC_OPBEANS_API_SERVER:-http://opbeans-dotnet}
       - ELASTIC_APM_SERVER_URLS=${ELASTIC_APM_SERVER_URLS:-http://localhost:8200}
     depends_on:
-      apm-server:
+      opbeans-dotnet:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "exit 0"]
       retries: 10
       interval: 20s
-      
+
   apm-server:
-    image: docker.elastic.co/apm/apm-server:${STACK_VERSION:-7.2.0}
+    image: docker.elastic.co/apm/apm-server:${STACK_VERSION:-7.3.0}
     ports:
       - "127.0.0.1:${APM_SERVER_PORT:-8200}:8200"
       - "127.0.0.1:${APM_SERVER_MONITOR_PORT:-6060}:6060"
@@ -57,6 +66,7 @@ services:
         -E xpack.monitoring.elasticsearch=true
         -E cloud.id=${ELASTIC_CLOUD_ID}
         -E cloud.auth=${ELASTIC_CLOUD_CREDENTIALS}
+        -E output.elasticsearch.enabled=${APM_SERVER_ELASTICSEARCH_OUTPUT_ENABLED:-true}
     cap_drop:
       - ALL
     cap_add:
@@ -67,12 +77,18 @@ services:
     logging:
       driver: 'json-file'
       options:
-        max-size: '2m'
-        max-file: '5'
+          max-size: '2m'
+          max-file: '5'
     healthcheck:
       test: ["CMD", "curl", "--write-out", "'HTTP %{http_code}'", "--silent", "--output", "/dev/null", "http://apm-server:8200/"]
       retries: 10
       interval: 10s
+
+  wait:
+    image: busybox
+    depends_on:
+      opbeans-frontend:
+        condition: service_healthy
 
 volumes:
   esdata:

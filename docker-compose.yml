@@ -4,7 +4,7 @@ services:
     build: .
     image: opbeans/opbeans-dotnet:latest
     ports:
-      - "127.0.0.1:${OPBEANS_DOTNET_PORT:-8000}:80"
+      - "127.0.0.1:${OPBEANS_DOTNET_PORT:-3000}:80"
     container_name: opbeans-dotnet
     logging:
       driver: 'json-file'
@@ -19,8 +19,6 @@ services:
       - ELASTIC_APM_LOG_FILE=stderr
       - ELASTIC_APM_LOG_LEVEL=debug
     depends_on:
-      elasticsearch:
-        condition: service_healthy
       apm-server:
         condition: service_healthy
     healthcheck:
@@ -32,7 +30,7 @@ services:
     build: .
     image: docker.elastic.co/observability-ci/it_opbeans-frontend_nginx:latest
     ports:
-      - "127.0.0.1:${OPBEANS_DOTNET_PORT:-3000}:3000"
+      - "127.0.0.1:${OPBEANS_DOTNET_PORT:-8000}:3000"
     container_name: opbeans-frontend
     logging:
       driver: 'json-file'
@@ -43,9 +41,7 @@ services:
       - ELASTIC_OPBEANS_API_SERVER=${ELASTIC_OPBEANS_API_SERVER:-http://opbeans-dotnet}
       - ELASTIC_APM_SERVER_URLS=${ELASTIC_APM_SERVER_URLS:-http://localhost:8200}
     depends_on:
-      elasticsearch:
-        condition: service_healthy
-      apm-server:
+      opbeans-dotnet:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "exit 0"]
@@ -142,7 +138,7 @@ services:
   wait:
     image: busybox
     depends_on:
-      opbeans-dotnet:
+      opbeans-frontend:
         condition: service_healthy
 
 volumes:
