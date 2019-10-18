@@ -1,7 +1,15 @@
+.ci
+.dockerignore
+.editorconfig
 .git
+.gitignore
+.gitmodules
 .idea
 .vscode
+docker-compose*.yml
 Dockerfile
 Makefile
+README.md
 tests
 bats
+target
