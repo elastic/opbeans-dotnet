@@ -1,4 +1,4 @@
-[![Build Status](https://apm-ci.elastic.co/job/apm-agent-dotnet/job/opbeans-dotnet-mbp/job/master/badge/icon)](https://apm-ci.elastic.co/job/apm-agent-dotnet/job/opbeans-dotnet-mbp/job/master/)
+[![Build Status](https://apm-ci.elastic.co/buildStatus/icon?job=apm-agent-dotnet%2Fopbeans-dotnet-mbp%2Fmaster)](https://apm-ci.elastic.co/job/apm-agent-dotnet/job/opbeans-dotnet-mbp/job/master/)
 
 # opbeans-dotnet
 This is an implementation of the Opbeans Elastic APM demo app in .NET as an [ASP.NET Core Web API](https://docs.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-2.2) application. It uses the same
