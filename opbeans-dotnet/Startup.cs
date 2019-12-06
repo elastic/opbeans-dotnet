@@ -56,22 +56,22 @@ namespace OpbeansDotnet
 							.Where(n => n != "opbeans-dotnet")
 							.ToList();
 
-						var dtProbabilityEnvVar = Environment.GetEnvironmentVariable("OPBEANS_DT_PROBABILITY");
-
-						if (!double.TryParse(dtProbabilityEnvVar, NumberStyles.Float, CultureInfo.InvariantCulture,
-							out var dtProbability))
-							dtProbability = 0.5;
-
-						var random = new Random(DateTime.UtcNow.Millisecond);
-
-						if (random.NextDouble() > dtProbability)
+						if (allServices != null && allServices.Any())
 						{
-							await next.Invoke();
-							return;
-						}
+							var dtProbabilityEnvVar = Environment.GetEnvironmentVariable("OPBEANS_DT_PROBABILITY");
 
-						if (allServices != null)
-						{
+							if (!double.TryParse(dtProbabilityEnvVar, NumberStyles.Float, CultureInfo.InvariantCulture,
+								out var dtProbability))
+								dtProbability = 0.5;
+
+							var random = new Random(DateTime.UtcNow.Millisecond);
+
+							if (random.NextDouble() > dtProbability)
+							{
+								await next.Invoke();
+								return;
+							}
+
 							var winnerService = allServices[random.Next(allServices.Count)];
 
 							if (!winnerService.StartsWith("http"))
@@ -80,7 +80,6 @@ namespace OpbeansDotnet
 								winnerService = winnerService.Substring(0, winnerService.Length - 1);
 
 							var httpClient = new HttpClient();
-
 
 							try
 							{
@@ -92,10 +91,6 @@ namespace OpbeansDotnet
 								//Ignore error, it'll be captured by the agent, but there is nothing to do.
 							}
 						}
-						else
-							await next.Invoke();
-
-						return;
 					}
 				}
 
