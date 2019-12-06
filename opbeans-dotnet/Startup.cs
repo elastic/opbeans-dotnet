@@ -115,7 +115,7 @@ namespace OpbeansDotnet
 			app.UseMvc();
 		}
 
-		private List<string> KnownApis =>
+		private static List<string> KnownApis =>
 			new List<string>
 			{
 				"/api/",
