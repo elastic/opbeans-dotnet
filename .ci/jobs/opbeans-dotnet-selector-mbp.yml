@@ -4,6 +4,7 @@
     display-name: Opbeans DotNET MBP selector
     description: Opbeans DotNET MBP selector
     project-type: multibranch
+    concurrent: true
     script-path: .ci/selector.groovy
     scm:
     - github:
