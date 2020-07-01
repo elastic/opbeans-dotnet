@@ -16,7 +16,6 @@ docker run --rm -t \
 ## Bump agent version in the Dockerfile
 sed -ibck "s#\(org.label-schema.version=\)\(.*\)#\1\"${AGENT_VERSION}\"#g" Dockerfile
 
-exit 0
 # Commit changes
 git add opbeans-dotnet/opbeans-dotnet.csproj Dockerfile
 git commit -m "Bump version ${AGENT_VERSION}"
