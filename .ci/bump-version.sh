@@ -14,7 +14,7 @@ docker run --rm -t \
     dotnet add package Elastic.Apm.NetCoreAll -v ${AGENT_VERSION}"
 
 ## Bump agent version in the Dockerfile
-sed -ibck "s#\(org.label-schema.version=\)\(.*\)#\1\"${AGENT_VERSION}\"#g" Dockerfile
+sed -ibck "s#\(org.label-schema.version=\)\(\".*\"\)\(.*\)#\1\"${AGENT_VERSION}\"\3#g" Dockerfile
 
 # Commit changes
 git add opbeans-dotnet/opbeans-dotnet.csproj Dockerfile
