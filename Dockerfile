@@ -1,13 +1,13 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 COPY . /src/
 
 WORKDIR /src
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime
 WORKDIR /app
-COPY --from=build /src/opbeans-dotnet/out ./
+COPY --from=build /src/out ./
 COPY --from=opbeans/opbeans-frontend:latest /app/build /opbeans-frontend
 
 LABEL \
