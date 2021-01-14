@@ -10,7 +10,7 @@ docker run --rm -t \
   -e HOME=/tmp \
   -e AGENT_VERSION="${AGENT_VERSION}" \
   -v "$(pwd)/opbeans-dotnet:/app" \
-  mcr.microsoft.com/dotnet/core/sdk:2.2 /bin/sh -c "
+  mcr.microsoft.com/dotnet/core/sdk:3.1 /bin/sh -c "
     dotnet add package Elastic.Apm.NetCoreAll -v ${AGENT_VERSION}"
 
 ## Bump agent version in the Dockerfile
