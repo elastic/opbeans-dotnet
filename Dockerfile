@@ -5,7 +5,7 @@ WORKDIR /src
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.7-alpine AS runtime
 WORKDIR /app
 COPY --from=build /src/out ./
 COPY --from=opbeans/opbeans-frontend:latest /app/build /opbeans-frontend
