@@ -36,7 +36,14 @@ namespace OpbeansDotnet
 				Seed.SeedDb(context);
 
 			services.AddDbContext<OpbeansDbContext>
-				(options => options.UseSqlite(@"Data Source=opbeans.db"));
+			(options =>
+				{
+					options.UseSqlite(@"Data Source=opbeans.db");
+					// This is a sample app with a sample dummy db
+					// it's fine to log any data, it's better for debugging.
+					options.EnableSensitiveDataLogging();
+				}
+			);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +69,7 @@ namespace OpbeansDotnet
 							var dtProbabilityEnvVar = Environment.GetEnvironmentVariable("OPBEANS_DT_PROBABILITY");
 
 							if (!double.TryParse(dtProbabilityEnvVar, NumberStyles.Float, CultureInfo.InvariantCulture,
-								out var dtProbability))
+								    out var dtProbability))
 								dtProbability = 0.5;
 
 							var random = new Random(DateTime.UtcNow.Millisecond);
@@ -115,10 +122,7 @@ namespace OpbeansDotnet
 			app.UseHttpsRedirection();
 
 			app.UseRouting();
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapControllers();
-			});
+			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 		}
 
 		private static List<string> KnownApis =>

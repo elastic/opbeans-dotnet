@@ -21,7 +21,7 @@ namespace OpbeansDotnet.Controllers
 
 		[HttpGet("top")]
 		public ActionResult<IEnumerable<Product>> Top() =>
-			_dbDbContext.Products.FromSql(@"SELECT
+			_dbDbContext.Products.FromSqlRaw(@"SELECT
 				products.id, sku, name, description, cost, selling_price, stock, type_id , SUM(order_lines.amount) AS sold
 				FROM products JOIN order_lines ON products.id=product_id GROUP BY products.id ORDER BY sold DESC")
 				.Select(n => Mapper.Map<Product>(n)).ToList();
