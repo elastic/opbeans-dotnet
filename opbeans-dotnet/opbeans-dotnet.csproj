@@ -9,7 +9,7 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="8.0.0" />
         <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.19.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.1" />
     </ItemGroup>
 
 </Project>
