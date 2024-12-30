@@ -1,0 +1,54 @@
+---
+# Dependabot Pull Requests are not updating the Dockerfile file.
+# This workflow will checkout the dependabot PR, update the Dockerfile file, and push the changes back to the PR.
+name: update-dependabot-pr
+
+on:
+  push:
+    branches:
+      - dependabot/nuget/**
+    paths-ignore:
+      - Dockerfile
+
+permissions:
+  contents: read
+
+jobs:
+  update-dependabot-pr:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update Dockerfile
+        run: make dockerfile
+
+      - name: Check if Dockerfile has changed
+        id: check-dockerfile-diff
+        run: |
+          changed=false
+          if git status --porcelain | grep -q 'Dockerfile'; then
+            changed=true
+          fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+
+      - name: Debug output
+        run: |-
+          echo 'changed: ${{ steps.check-dockerfile-diff.outputs.changed }}'
+
+      # inspired by https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
+      - name: Commit changes (signed)
+        if: ${{ steps.check-dockerfile-diff.outputs.changed == 'true' }}
+        run: |
+          export BRANCH=${GITHUB_REF#refs/heads/}
+          export SHA=$(git rev-parse "$BRANCH:$FILE_TO_COMMIT")
+          gh api --method PUT "/repos/${REPO}/contents/$FILE_TO_COMMIT" \
+            --field message="Update $FILE_TO_COMMIT" \
+            --field content=@<(base64 -i $FILE_TO_COMMIT) \
+            --field sha="${SHA}" \
+            --field branch="${BRANCH}"
+        env:
+          FILE_TO_COMMIT: Dockerfile
+          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
