@@ -43,3 +43,7 @@ create-release: ## Create git tag given the APM Agent version
 	else \
 		echo "git tag v$(AGENT_VERSION) already exists"; \
 	fi
+
+.PHONY: dockerfile
+dockerfile: ## Update dockerfile with the version
+	@sed -ibck "s#\(org.label-schema.version=\)\(\".*\"\)\(.*\)#\1\"${AGENT_VERSION}\"\3#g" Dockerfile
